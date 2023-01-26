@@ -15,31 +15,15 @@
  */
 
 // Prevents direct access
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-// const PLUGIN_VERSION = '1.0.0';
+const PLUGIN_VERSION = '1.0.0';
 const PLUGIN_FILE    = __FILE__;
 
-
-class LibraryDocs
-{
-    function activate()
-    {
-        // create the CPT
-        // flash rewrite rules
-    }
-
-    function deactivate()
-    {
-        // flash rewrite rules
-    }
+// define plugin path constant
+if ( ! defined( 'LibraryDocs_PATH' ) ) {
+	define( 'LibraryDocs_PATH', plugin_dir_path( PLUGIN_FILE ) );
 }
 
-if ( class_exists('LibraryDocs')) {
-    $libraryDocs = new LibraryDocs();
-}
-
-register_activation_hook( PLUGIN_FILE, array( $libraryDocs, 'activate' ));
-register_deactivation_hook( PLUGIN_FILE, array( $libraryDocs, 'deactivate' ));
+// Require plugin main class
+require_once( LibraryDocs_PATH . 'src/Plugin.php' );
