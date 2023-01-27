@@ -4,6 +4,7 @@ namespace Src;
 use Src\Base\CPT;
 use Src\Base\Enqueue;
 use Src\Base\Activate;
+use Src\Base\Shortcode;
 use Src\Base\DeActivate;
 use Src\Options\Options;
 
@@ -16,10 +17,11 @@ final class Setup
     {
 		return [
 			Options::class,
+			Enqueue::class,
+			CPT::class,
+			Shortcode::class,
 			Activate::class,
 			DeActivate::class,
-			CPT::class,
-			Enqueue::class,
 		];
 	}
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Src\Base;
 
 class Controller
