@@ -6,6 +6,8 @@ class CPT
     public function register()
     {
         add_action( 'init', [ $this, 'cpt' ], 15 );
+        add_action( 'add_meta_boxes', [ $this, 'add_upload_field_meta_box' ] );
+        add_action( 'save_post', [ $this, 'save_custom_field_meta_box' ] );
     }
 
     /**
@@ -57,5 +59,64 @@ class CPT
         );
     
         register_post_type( 'document', $args );
+    }
+
+    /**
+	 * Creates the upload custom field
+	 */
+    public function add_upload_field_meta_box()
+    {
+        add_meta_box(
+            'upload_field_meta_box',
+            __( 'Upload Document File', 'library-docs' ),
+            [ $this, 'display_upload_field_meta_box' ],
+            'document',
+            'normal', // Context
+            'default' // Priority
+        );
+    }
+
+    /**
+	 * Display the form field for the upload field
+	 */
+    public function display_upload_field_meta_box( $post )
+    {
+        // Retrieve the current value of the upload field
+        $current_value = get_post_meta( $post->ID, 'ld_upload_field', true );
+
+        // Enqueue the WordPress media uploader script
+        wp_enqueue_media();
+        
+        // Display the form field
+        ?>
+        <label for="ld_upload_field">Upload Field:</label>
+        <input type="text" id="ld_upload_field" name="ld_upload_field" value="<?php echo esc_attr( $current_value ); ?>">
+        <input type="button" id="upload_field_button" value="Select File">
+        <script>
+        jQuery(document).ready(function($){
+            $('#upload_field_button').click(function(e) {
+                e.preventDefault();
+                var image = wp.media({ 
+                    title: 'Upload Image',
+                    multiple: false
+                }).open()
+                .on('select', function(e){
+                    var uploaded_image = image.state().get('selection').first();
+                    console.log(uploaded_image);
+                    var image_url = uploaded_image.toJSON().url;
+                    $('#ld_upload_field').val(image_url);
+                });
+            });
+        });
+        </script>
+        <?php
+    }
+
+    public function save_custom_field_meta_box( $post_id ) {
+        // Check if the custom field has been posted
+        if ( isset( $_POST['ld_upload_field'] ) ) {
+            // Update the custom field data
+            update_post_meta( $post_id, 'ld_upload_field', sanitize_text_field( $_POST['ld_upload_field'] ) );
+        }
     }
 }

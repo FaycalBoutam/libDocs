@@ -14,7 +14,9 @@
  * License URI:     http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-if ( ! defined( 'ABSPATH' ) ) { exit; }
+ defined( 'ABSPATH' ) || exit;
+
+ const PLUGIN_VERSION = '1.0.0';
 
 if ( file_exists( dirname( __FILE__ ). '/vendor/autoload.php' ) ) {
     require_once dirname( __FILE__ ). '/vendor/autoload.php';
